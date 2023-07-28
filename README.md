@@ -1,0 +1,1 @@
+# swatch-image-and-collection-to-current-product-Selected-image
