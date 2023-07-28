@@ -1,0 +1,112 @@
+
+    <div class="grid-product__images">
+
+      {%- for option in product.options_with_values -%}
+        
+        {%- liquid
+          assign option_name = option.name | downcase
+         
+        -%}
+      {% if option_name contains 'color' or   option_name contains 'Color' or  option_name contains 'colour' or option_name contains 'Colour' %}
+
+      {% comment %} variant.metafields.custom.swatch_image {% endcomment %}
+
+          {%- assign option_index = forloop.index0 -%}
+          {%- assign values = '' -%}
+
+          {% assign variable = 0 %}
+          {%- for variant in product.variants  -%}
+            {% assign variant_loop_index = forloop.index %}
+
+           
+            {% assign image_value = product.variants[variable].metafields.custom.swatch_image.value %}
+
+            {% if image_value != blank %}
+              {% assign imaged = image_value %} 
+
+              {% comment %} <h2>{{image_value}}</h2> {% endcomment %}
+      
+            {% endif %}
+          
+            {%- assign value = variant.options[option_index] %}
+            {%- unless values contains value -%}
+              {%- liquid
+                assign values = values | join: ',' | append: ',' | append: value | split: ','
+
+               assign inventory_quantity =  variant.inventory_quantity
+
+             -%}
+            
+                {% if inventory_quantity > 0 %}
+                   <a  class="swatch-item" href="{{ product.url | within: collection }}?variant={{variant.id}}"> 
+                      <div class="swch-img-wrap image-inex--{{ forloop.index }} variation-index-{{variant_loop_index}}" {%if imaged != blank %} style="background-image:url('{{ imaged | image_url }}')" {%else %} style="background-color:{{value | downcase }}" {% endif %} > <span>{{ value | escape }}</span></div>
+                  </a>
+                {% endif %}
+
+                {%- endunless -%} 
+
+                {% assign variable = variable | plus: 1 %}
+              {%- endfor -%}
+
+            {% endif %}
+  
+        {%- endfor -%}
+    </div>
+
+
+
+
+<style>
+.swch-img-wrap{
+    height: 30px!important;
+    width: 30px!important;
+    min-width: 30px!important;
+    border: 0.5px solid #929292!important;
+    position: relative;
+    background-color: rgb(255, 255, 255);
+    background-size: cover;
+    background-position: center center;
+    background-repeat: no-repeat;
+    min-width: 62px;
+    width: 62px;
+    height: 62px;
+    outline: none;
+    box-sizing: border-box;
+    border: 1px solid rgb(50, 50, 50);
+    border-radius: 50%;
+}
+
+.grid-product__images{
+    overflow: hidden;
+    align-items: center;
+    display: flex;
+    margin: 0 auto;
+    justify-content: center;
+    flex-wrap: wrap;
+    max-width: 310px;
+}
+
+.grid-product__images a{
+    margin-right: 4px;
+    margin-bottom: 4px;
+}
+
+.grid-product__images .swch-img-wrap>span{
+    visibility: hidden;
+}
+
+
+.grid-product .ACC_SB_Category_62_wrap{
+    display: none !important;
+}
+
+@media (max-width:767px){
+    .swch-img-wrap{
+        height: 24px!important;
+        width: 24px!important;
+        min-width: 24px!important;
+    }
+} 
+</style>
+
+
